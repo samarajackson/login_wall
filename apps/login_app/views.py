@@ -96,13 +96,3 @@ def delete(request, message_id):
     if message.user_id.id == user.id and timediff < 30:
         message.delete()
     return redirect("/success")
-
-
-def deletecheck(self, created):
-    now = datetime.now()
-    timediff = now - created
-    timediff = timediff.total_minutes()
-    if timediff < 30:
-        return True
-    else:
-        return False

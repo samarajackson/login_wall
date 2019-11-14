@@ -61,8 +61,7 @@
                     <div class="original-post">
                         <h5>{{message.user_id.first}} {{message.user_id.last}} - {{message.created_at}}</h5>
                         <p>{{message.message}}</p>
-                        <p> Time to delete: {{deletecheck}}</p>
-                        {% if user.id == message.user_id.id and deletecheck() %}
+                        {% if user.id == message.user_id.id %}
                             <a href="delete/{{message.id}}"><p>Delete</p></a>
                         {% endif %}
                     </div>
