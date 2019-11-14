@@ -16,13 +16,13 @@ def register(request):
     if len(errors) > 0:
         for key, value in errors.items():
             messages.error(request, value)
-            return redirect("/")
+        return redirect("/")
     else:
         first_name = request.POST["first"]
         last = request.POST["last"]
         email = request.POST["email"]
         pw = request.POST["pw"]
-        bday=request.POST["bday"]
+        bday = request.POST["bday"]
         # bday = datetime.strptime(bday, "%Y-%m-%d").date()
         pw_hash = bcrypt.hashpw(pw.encode(), bcrypt.gensalt())
         user = User.objects.create(
@@ -33,57 +33,61 @@ def register(request):
 
 def success(request):
     if "userid" in request.session:
-        user=User.objects.get(id=request.session["userid"])
+        user = User.objects.get(id=request.session["userid"])
         messages = Message.objects.all()
-        now = datetime.now()
-        deletecheck = now - timedelta(minutes=30)
-        context={
-            "user":user,
-            "messages":messages,
-            "deletecheck": deletecheck
+        context = {
+            "user": user,
+
+            "messages": messages
         }
-        return render(request, "home.html",context)
+        return render(request, "home.html", context)
     else:
         return redirect("/")
+
 
 def logout(request):
     if "userid" in request.session:
         del request.session["userid"]
     return redirect("/")
 
+
 def login(request):
-    if User.objects.filter(email = request.POST['email']):
-        user = User.objects.get(email = request.POST['email'])
+    if User.objects.filter(email=request.POST['email']):
+        user = User.objects.get(email=request.POST['email'])
         if bcrypt.checkpw(request.POST['pw'].encode(), user.pw.encode()):
             request.session["userid"] = user.id
             return redirect("/success")
         else:
-            context={
-            "error": "Password is incorrect."
+            context = {
+                "error": "Password is incorrect."
             }
     else:
-        context={
+        context = {
             "error": "There is no account with that email address."
         }
-    return render(request,"index.html",context)
+    return render(request, "index.html", context)
+
 
 def post_message(request):
     userid = request.session["userid"]
     user = User.objects.get(id=userid)
     message = request.POST["message"]
-    message = Message.objects.create(user_id=user,message=message)
+    message = Message.objects.create(user_id=user, message=message)
     return redirect("/success")
 
-def post_comment(request,message_id):
+
+def post_comment(request, message_id):
     userid = request.session["userid"]
     user = User.objects.get(id=userid)
     message = Message.objects.get(id=message_id)
     comment = request.POST["comment"]
-    comment = Comment.objects.create(user_id=user,message_id=message,comment=comment)
+    comment = Comment.objects.create(
+        user_id=user, message_id=message, comment=comment)
     return redirect('/success')
 
-def delete(request,message_id):
-    userid=request.session["userid"]
+
+def delete(request, message_id):
+    userid = request.session["userid"]
     user = User.objects.get(id=userid)
     message = Message.objects.get(id=message_id)
     now = datetime.now()
@@ -92,3 +96,13 @@ def delete(request,message_id):
     if message.user_id.id == user.id and timediff < 30:
         message.delete()
     return redirect("/success")
+
+
+def deletecheck(self, created):
+    now = datetime.now()
+    timediff = now - created
+    timediff = timediff.total_minutes()
+    if timediff < 30:
+        return True
+    else:
+        return False

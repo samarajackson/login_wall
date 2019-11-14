@@ -21,7 +21,7 @@ class UserManager(models.Manager):
             errors['pw2'] = "Passwords do not match"
         if User.objects.filter(email = postData['email']):
             errors['email_not_unique']="Email address already is used for an existing account"
-        if bday == None:
+        if bday == "":
             errors['bday_required']="Birthday is a required field"
         else:
             bday = datetime.strptime(postData['bday'], "%Y-%m-%d").date()

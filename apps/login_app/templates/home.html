@@ -51,19 +51,21 @@
                 <textarea type="text" class="form-control" rows="5" name="message" id="message"></textarea>
             </div>
             <div class="row justify-content-end">
-                <input type="submit" value="Post Message">
+                <input type="submit" value="Post Message" class="btn btn-primary">
             </div>
         </form>
         <ul class="list-unstyled">
             {% for message in messages reversed%}
             <li class="media">
                 <div class="media-body">
-                    <h5>{{message.user_id.first}} {{message.user_id.last}} - {{message.created_at}}</h5>
-                    <p>{{message.message}}</p>
-                    <p> Time to delete: {{deletecheck}}</p>
-                    {% if user.id == message.user_id.id and message.created_at >= deletecheck %}
-                        <a href="delete/{{message.id}}"><p>Delete</p></a>
-                    {% endif %}
+                    <div class="original-post">
+                        <h5>{{message.user_id.first}} {{message.user_id.last}} - {{message.created_at}}</h5>
+                        <p>{{message.message}}</p>
+                        <p> Time to delete: {{deletecheck}}</p>
+                        {% if user.id == message.user_id.id and deletecheck() %}
+                            <a href="delete/{{message.id}}"><p>Delete</p></a>
+                        {% endif %}
+                    </div>
                     <ul class="list-unstyled">
                         {% for comment in message.message_comments.all %}
                         <li class="media indent">
@@ -83,7 +85,7 @@
                             <textarea type="text" class="form-control" rows="3" name="comment" id="comment"></textarea>
                         </div>
                         <div class="row justify-content-end">
-                            <input type="submit" value="Post Comment">
+                            <input type="submit" value="Post Comment" class="btn btn-info">
                         </div>
                     </form>
                 </div>
