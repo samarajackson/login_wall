@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Welcome!</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+        integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+        integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+        crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+        integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+        crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+        integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+        crossorigin="anonymous"></script>
+    <style>
+        .navbar,
+        .navbar a {
+            color: aliceblue;
+        }
+
+        header {
+            margin-bottom: 1%;
+        }
+        .indent{
+            padding-left:3%;
+        }
+    </style>
+</head>
+
+<body>
+    <header class="navbar navbar-dark bg-dark">
+        <div class="col-sm-11">
+            <h1>Welcome to the CodingDojo Wall, {{user.first}}!</h1>
+        </div>
+        <div class="col-sm-1">
+            <a href='../logout'>Log Out</a>
+        </div>
+    </header>
+    <div class="container">
+        <form action="post_message" method="POST">
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="message">
+                    <h4>Post a Message</h4>
+                </label>
+                <textarea type="text" class="form-control" rows="5" name="message" id="message"></textarea>
+            </div>
+            <div class="row justify-content-end">
+                <input type="submit" value="Post Message">
+            </div>
+        </form>
+        <ul class="list-unstyled">
+            {% for message in messages reversed%}
+            <li class="media">
+                <div class="media-body">
+                    <h5>{{message.user_id.first}} {{message.user_id.last}} - {{message.created_at}}</h5>
+                    <p>{{message.message}}</p>
+                    <p> Time to delete: {{deletecheck}}</p>
+                    {% if user.id == message.user_id.id and message.created_at >= deletecheck %}
+                        <a href="delete/{{message.id}}"><p>Delete</p></a>
+                    {% endif %}
+                    <ul class="list-unstyled">
+                        {% for comment in message.message_comments.all %}
+                        <li class="media indent">
+                            <div class="media-body">
+                                <h6>{{comment.user_id.first}} {{comment.user_id.last}} - {{comment.created_at}}</h6>
+                                <p>{{comment.comment}}</p>
+                            </div>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                    <form action="post_comment/{{message.id}}" method="POST" class="indent">
+                        {% csrf_token %}
+                        <div class="form-group">
+                            <label for="comment">
+                                <h6>Post a Comment</h6>
+                            </label>
+                            <textarea type="text" class="form-control" rows="3" name="comment" id="comment"></textarea>
+                        </div>
+                        <div class="row justify-content-end">
+                            <input type="submit" value="Post Comment">
+                        </div>
+                    </form>
+                </div>
+            </li>
+            {% endfor %}
+        </ul>
+    </div>
+</body>

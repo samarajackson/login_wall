@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Login or Register</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+        integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+        integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+        crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+        integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+        crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+        integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+        crossorigin="anonymous"></script>
+    <style>
+        .messages {
+            color: crimson;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="row">
+            <div class="col-sm">
+                <h1>Registration</h1>
+                {% if messages %}
+                <ul class="messages">
+                    {% for message in messages %}
+                    <li>{{ message }}</li>
+                    {% endfor %}
+                </ul>
+                {% endif %}
+                <form action="create" method="POST">
+                    {% csrf_token %}
+                    <div class="form-group">
+                        <label for="first" class="col-sm-5 col-form-label">First Name</label>
+                        <input type="text" class="col-sm-6" name="first" id="first">
+                    </div>
+                    <div class="form-group">
+                        <label for="last" class="col-sm-5 col-form-label">Last Name</label>
+                        <input type="text" class="col-sm-6" name="last" id="last">
+                    </div>
+                    <div class="form-group">
+                        <label for="email" class="col-sm-5 col-form-label">Email</label>
+                        <input type="email" class="col-sm-6" name="email" id="email">
+                    </div>
+                    <div class="form-group">
+                        <label for="bday" class="col-sm-5 col-form-label">Birthday</label>
+                        <input type="date" class="col-sm-6" name="bday" id="bday">
+                    </div>
+                    <div class="form-group">
+                        <label for="pw" class="col-sm-5 col-form-label">Password</label>
+                        <input type="password" class="col-sm-6" name="pw" id="pw">
+                    </div>
+                    <div class="form-group">
+                        <label for="pw2" class="col-sm-5 col-form-label">Confirm PW</label>
+                        <input type="password" class="col-sm-6" name="pw2" id="pw2">
+                    </div>
+                    <div class="col-lg align-self-center">
+                        <input type="submit" value="Register">
+                    </div>
+                </form>
+            </div>
+            <div class="col-sm">
+                <h1>Login</h1>
+                {% if error %}
+                <ul class="messages">
+                    <li>{{error}}</li>
+                </ul>
+                {% endif %}
+                <form action="login" method="POST">
+                    {% csrf_token %}
+                    <div class="form-group">
+                        <label for="email" class="col-sm-5 col-form-label">Email</label>
+                        <input type="text" class="col-sm-6" name="email" id="email">
+                    </div>
+                    <div class="form-group">
+                        <label for="pw" class="col-sm-5 col-form-label">Password</label>
+                        <input type="password" class="col-sm-6" name="pw" id="pw">
+                    </div>
+                    <div class="col-lg align-self-center">
+                        <input type="submit" value="Login">
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</body>
